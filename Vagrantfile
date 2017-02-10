@@ -3,7 +3,7 @@
 
 VAGRANTFILE_API_VERSION = '2'
 
-required_plugins = %w(vagrant-vbguest)
+required_plugins = %w(vagrant-vbguest vagrant-libvirt)
 
 plugins_to_install = required_plugins.select { |plugin| not Vagrant.has_plugin? plugin }
 if not plugins_to_install.empty?
@@ -34,11 +34,17 @@ SCRIPT
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.vm.synced_folder '.', '/opt/rpm'
 
+  config.vm.provider "libvirt"
   config.vm.provider "virtualbox"
   config.vm.provider "vmware_fusion"
 
   config.vm.box = "centos/7"
-  # config.vm.box = "centos-7.0-base"
+
+  config.vm.provider :libvirt do |libvirt|
+    libvirt.driver = "qemu"
+    libvirt.memory = 2048
+    libvirt.cpus = 2
+  end
 
   config.vm.provider :virtualbox do |vb|
     vb.customize ['modifyvm', :id, '--cpus', 2]

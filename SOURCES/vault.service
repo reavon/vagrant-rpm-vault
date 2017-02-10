@@ -1,5 +1,5 @@
 [Unit]
-Description=vault
+Description=Vault - A tool for managing secrets
 After=consul.service
 Requires=consul.service
 
